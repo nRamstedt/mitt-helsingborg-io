@@ -9,14 +9,14 @@ This api is built on Node.js and Express and is created with this <a href="https
 
 The specific .env-parameters required for this project are:
 
+- AUTHSECRET (jwt secret for creating tokens)
+- NAVETBANKIDAPIURL (url for the navet-bankid api)
+- PAYMENTAPIURL (url for the payment api)
+- DBHOST (host for the database)
+- DBPORT (port for the database)
+- DBUSER (username for connecting)
+- DBPASSWORD (password for connecting)
+- DBNAME (name of the database)
 
-AUTHSECRET (jwt secret for creating tokens)
-
-NAVETBANKIDAPIURL (url for the navet-bankid api)
-PAYMENTAPIURL (url for the payment api)
-
-DBHOST (host for the database)
-DBPORT (port for the database)
-DBUSER (username for connecting)
-DBPASSWORD (password for connecting)
-DBNAME (name of the database)
+## Database
+MySql is used for datastorage and a database has to be created for the project to work. You can find a test database in the project that can be used for development. 
