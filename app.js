@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.xml({ normalize: true }));
 
-app.get('/', (_req, res) => res.send('Hello World!'));
+app.get('/', (_req, res) => res.send('Mitt Helsingborg API - Main touchpoint for mitt helsingborg app, webpage and assistants.'));
 
 app.use(require('./components'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -50,6 +50,6 @@ const server = https.createServer({
     key: fs.readFileSync(process.env.SERVERKEY),
     requestCert: false,
     rejectUnauthorized: false
-}, app).listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
+}, app).listen(process.env.PORT, () => console.log(`Mitt Helsingborg touchpoint app listening on port ${process.env.PORT}!`));
 
 module.exports = server;
