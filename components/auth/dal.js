@@ -6,15 +6,8 @@ const mysql = require('mysql');
 exports.authenticate = async (pno, endUserIp) => {
     try {
         const authUserData = await authUser(pno, endUserIp);
-
         console.log('authud', authUserData);
-
-        if (authUserData) {
-            const user = await updateOrCreateUser(authUserData.user);
-            return user;
-        } else {
-            return null;
-        }
+            return authUserData;
     } catch (error) {
         console.log('error', error);
         return null;
@@ -22,7 +15,8 @@ exports.authenticate = async (pno, endUserIp) => {
 };
 
 const authUser = async (pno, endUserIp) => {
-    const endpoint = `${process.env.NAVETBANKIDAPIURL}/`;
+    // TODO Save in config file
+    const endpoint = `http://localhost:3000/bankid/api/v1/auth/`;
 
     const data = {
         personalNumber: pno,
