@@ -10,12 +10,12 @@ router.post('/', async (req, res) => {
     try {
         console.log('reqbody', req.body);
 
-        const { pno, endUserIp } = req.body;
+        const { personalNumber, endUserIp } = req.body;
 
-        console.log('pno', pno);
+        console.log('pno', personalNumber);
         console.log('eui', endUserIp);
 
-        const user = await dal.authenticate(pno, endUserIp);
+        const user = await dal.authenticate(personalNumber, endUserIp);
         console.log('user', user);
         if (user && user.status === 200) {
             let token = jwt.sign({ pno: user.personalNumber }, process.env.AUTHSECRET, { expiresIn: '24h' }); // Signing the token
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
                 sucess: true,
                 err: null,
                 token,
-                user: {...user.data}
+                user: { ...user.data }
             });
         } else {
             console.log('auth failed');
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', validateRequest, async (_req, res) => {
     try {
-            const { id } = req.params;
+        const { id } = req.params;
 
         const user = await dal.collect(id);
 

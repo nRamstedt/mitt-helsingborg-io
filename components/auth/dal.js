@@ -3,12 +3,12 @@ const axios = require('axios');
 const https = require('https');
 const mysql = require('mysql');
 
-exports.authenticate = async (pno, endUserIp) => {
+exports.authenticate = async (personalNumber, endUserIp) => {
     // TODO Save in config file
     const endpoint = `http://localhost:3000/api/v1/bankid/auth/`;
 
     const data = {
-        personalNumber: pno,
+        personalNumber,
         endUserIp,
         userVisibleData: 'Helsingborg stad'
     };
@@ -27,8 +27,6 @@ exports.authenticate = async (pno, endUserIp) => {
 exports.collect = async (orderRef) => {
     // TODO Save in config file
     const endpoint = `http://localhost:3000/api/v1/bankid/collect/`;
-
-
 
     return axiosClient.post(endpoint, orderRef).then(response => {
         if (response.status !== 200) {
