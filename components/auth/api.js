@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
                 sucess: true,
                 err: null,
                 token,
-                user: user
+                user: {...user.data}
             });
         } else {
             console.log('auth failed');
