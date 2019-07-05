@@ -27,8 +27,10 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 exports.collect = async (orderRef) => {
     // TODO Save in config file
     const endpoint = `http://localhost:3000/api/v1/bankid/collect/`;
-
-    return axiosClient.post(endpoint, orderRef).then(response => {
+    const data = {
+        orderRef,
+    }
+    return axiosClient.post(endpoint, data).then(response => {
         if (response.status !== 200) {
             console.log(response.status);
             console.log(response.data);

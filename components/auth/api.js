@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', validateRequest, async (_req, res) => {
+router.post('/:id', validateRequest, async (_req, res) => {
     try {
         const { id } = req.params;
 
