@@ -7,7 +7,7 @@ exports.authenticate = async (pno, endUserIp) => {
     try {
         const authUserData = await authUser(pno, endUserIp);
         console.log('authud', authUserData);
-            return authUserData;
+        return authUserData;
     } catch (error) {
         console.log('error', error);
         return null;
@@ -16,7 +16,7 @@ exports.authenticate = async (pno, endUserIp) => {
 
 const authUser = async (pno, endUserIp) => {
     // TODO Save in config file
-    const endpoint = `http://localhost:3000/bankid/api/v1/auth/`;
+    const endpoint = `http://localhost:3000/api/v1/bankid/auth/`;
 
     const data = {
         personalNumber: pno,
