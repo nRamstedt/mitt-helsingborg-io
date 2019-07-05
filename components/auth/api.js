@@ -39,11 +39,11 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:id', validateRequest, async (_req, res) => {
+router.post('/:orderRef', validateRequest, async (_req, res) => {
     try {
-        const { id } = req.params;
+        const { orderRef } = req.params;
 
-        const user = await dal.collect(id);
+        const user = await dal.collect(orderRef);
 
         return res.json(user);
     } catch (err) {

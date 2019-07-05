@@ -1,34 +1,55 @@
-const mysql = require('mysql');
+const fs = require('fs');
+const axios = require('axios');
+const https = require('https');
 
-exports.saveForm = async (inputData) => {
-    return new Promise(function (resolve, reject) {
-        try {
-            const db = mysql.createConnection({
-                host: process.env.DBHOST,
-                port: process.env.DBPORT,
-                user: process.env.DBUSER,
-                password: process.env.DBPASSWORD,
-                database: process.env.DBNAME
-            });
 
-            db.connect((err) => {
-                if (err) {
-                    reject(err);
-                }
-                console.log('Connected to database');
-            });
-
-            db.query('INSERT INTO forms SET ?', inputData, function (error, results, fields) {
-                if (error) {
-                    console.log(error);
-                    reject(error);
-                }
-                resolve(results.insertId);
-            });
-
-            db.end();
-        } catch (error) {
-            reject(error);
+exports.postNotifcations = async (notification) => {
+    try {
+        const endpoint = `${process.env.NOTIFICATION}/`;
+        const data = {
+            notification,
         }
-    });
+        return axiosClient.post(endpoint, data).then(response => {
+            if (response.status !== 200) {
+                console.log(response.status);
+                console.log(response.data);
+                return null;
+            } else {
+                return response.data;
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
 };
+
+exports.getNotifications= async (data) => {
+    try {
+        const endpoint = `${process.env.NOTIFICATION}/`;
+    
+        return axiosClient.get(endpoint, data).then(response => {
+            if (response.status !== 200) {
+                console.log(response.status);
+                console.log(response.data);
+                return null;
+            } else {
+                return response.data;
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
+const axiosClient = axios.create({
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false,
+        cert: fs.readFileSync(process.env.SERVERCERT),
+        key: fs.readFileSync(process.env.SERVERKEY)
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});

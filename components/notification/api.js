@@ -7,26 +7,36 @@ const validateRequest = schemaValidator(true, authSchemas);
 
 router.post('/', validateRequest, async (req, res) => {
     try {
-        const { inputData } = req.body;
+        const user_id = req.body.find(x => x.key === 'user_id').value;
+        const service_id = req.body.find(x => x.key === 'service_id').value;
+        const message = req.body.find(x => x.key === 'message').value;
 
-        // Map inputdata to existing keys in the db.
-        const name = inputData.find(x => x.key === 'name').value;
-        const personalNumber = inputData.find(x => x.key === 'personalNumber').value;
-        const address = inputData.find(x => x.key === 'address').value;
-        const zipCode = inputData.find(x => x.key === 'zipCode').value;
-        const city = inputData.find(x => x.key === 'city').value;
-
-        const formRow = {
-            Name: name,
-            PersonalNumber: personalNumber,
-            Address: address,
-            ZipCode: zipCode,
-            City: city,
-            Status: 0
+        const notification = {
+            user_id,
+            service_id,
+            message,
         };
 
         return res.json(
-            await dal.saveForm(formRow)
+            await dal.postNotifcations(notification)
+        );
+    } catch (err) {
+        res.json(err);
+    }
+});
+
+router.get('/', validateRequest, async (req, res) => {
+    try {
+        const limit = req.body.limit ? req.body.limit : 10;
+
+        const data = {
+            user_id,
+            service_id,
+            limit
+        };
+
+        return res.json(
+            await dal.getNotifcations(data)
         );
     } catch (err) {
         res.json(err);

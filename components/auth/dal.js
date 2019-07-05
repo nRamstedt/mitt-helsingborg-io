@@ -5,7 +5,7 @@ const mysql = require('mysql');
 
 exports.authenticate = async (personalNumber, endUserIp) => {
     // TODO Save in config file
-    const endpoint = `http://localhost:3000/api/v1/bankid/auth/`;
+    const endpoint = `${process.env.BANKIDURL}/auth/`;
 
     const data = {
         personalNumber,
@@ -26,7 +26,7 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 
 exports.collect = async (orderRef) => {
     // TODO Save in config file
-    const endpoint = `http://localhost:3000/api/v1/bankid/collect/`;
+    const endpoint = `${process.env.BANKIDURL}/collect/`;
     const data = {
         orderRef,
     }
