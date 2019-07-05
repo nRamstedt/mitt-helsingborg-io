@@ -91,27 +91,19 @@ const getDbConnection = () => {
     });
 };
 
-exports.getUserData= async (personalNumber) => {
+exports.getUser= async (personalNumber) => {
     try {
-        const user = await getUserFromDatabase(personalNumber);
-
-        // array does not exist, is not an array, or is empty
-        if (!Array.isArray(user) || !user.length) {
-            console.log('New User: Creating and Saving user data');
-            await createUser(inputData);
-        } else {
-            console.log('Old User: Updating user Data');
-            await updateUser(inputData);
-        }
-        return {
-            personalNumber: newUser[0].PersonalNumber,
-            name: newUser[0].Name + ' ' + newUser[0].SurName,
-            givenName: newUser[0].Name,
-            surName: newUser[0].SurName,
-            address: newUser[0].Address,
-            zipCode: newUser[0].ZipCode,
-            city: newUser[0].City
-        };
+        const endpoint = `${process.env.NAVETURL}/`;
+    
+        return axiosClient.get(endpoint, personalNumber).then(response => {
+            if (response.status !== 200) {
+                console.log(response.status);
+                console.log(response.data);
+                return null;
+            } else {
+                return response.data;
+            }
+        });
     } catch (error) {
         console.log(error);
         return null;
