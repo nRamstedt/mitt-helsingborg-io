@@ -10,20 +10,20 @@ router.post('/', async (req, res) => {
     try {
         console.log('reqbody', req.body);
 
-        const { pno, endUserIp } = req.body;
+        const { personalNumber, endUserIp } = req.body;
 
-        console.log('pno', pno);
+        console.log('pno', personalNumber);
         console.log('eui', endUserIp);
 
-        const user = await dal.authenticate(pno, endUserIp);
+        const user = await dal.authenticate(personalNumber, endUserIp);
         console.log('user', user);
-        if (user && pno === user.personalNumber) {
+        if (user && user.status === 200) {
             let token = jwt.sign({ pno: user.personalNumber }, process.env.AUTHSECRET, { expiresIn: '24h' }); // Signing the token
             res.json({
                 sucess: true,
                 err: null,
                 token,
-                user: user
+                user: { ...user.data }
             });
         } else {
             console.log('auth failed');
@@ -35,25 +35,17 @@ router.post('/', async (req, res) => {
             });
         }
     } catch (err) {
-        res.json(err);
+        return err;
     }
 });
 
-router.get('/user/:id', validateRequest, async (_req, res) => {
+router.post('/:orderRef', validateRequest, async (_req, res) => {
     try {
-        return res.json(
-            {
-                'user': {
-                    'name': 'Tom Andreasson',
-                    'givenName': 'Tom',
-                    'surname': 'Andreasson',
-                    'personalNumber': '198404293279',
-                    'address': 'Drottninggatan 1',
-                    'zipCode': 11120,
-                    'city': 'Stockholm'
-                }
-            }
-        );
+        const { orderRef } = req.params;
+
+        const user = await dal.collect(orderRef);
+
+        return res.json(user);
     } catch (err) {
         res.json(err);
     }
