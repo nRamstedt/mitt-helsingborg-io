@@ -3,10 +3,9 @@ const axios = require('axios');
 const https = require('https');
 const mysql = require('mysql');
 
-
 exports.authenticate = async (pno, endUserIp) => {
     // TODO Save in config file
-    const endpoint = `http://localhost:3004/bankid/api/v1/auth/`;
+    const endpoint = `http://localhost:3000/api/v1/bankid/auth/`;
 
     const data = {
         personalNumber: pno,

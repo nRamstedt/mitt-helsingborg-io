@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 
         const user = await dal.authenticate(pno, endUserIp);
         console.log('user', user);
-        if (user && pno === user.personalNumber) {
+        if (user && user.status === 200) {
             let token = jwt.sign({ pno: user.personalNumber }, process.env.AUTHSECRET, { expiresIn: '24h' }); // Signing the token
             res.json({
                 sucess: true,
