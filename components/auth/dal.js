@@ -24,6 +24,22 @@ exports.authenticate = async (pno, endUserIp) => {
     });
 };
 
+exports.collect = async (orderRef) => {
+    // TODO Save in config file
+    const endpoint = `http://localhost:3000/api/v1/bankid/collect/`;
+
+
+
+    return axiosClient.post(endpoint, orderRef).then(response => {
+        if (response.status !== 200) {
+            console.log(response.status);
+            console.log(response.data);
+            return null;
+        } else {
+            return response.data;
+        }
+    });
+};
 // Function to bypass the whole bankid and navet step for dev purposes.
 const bypassAuthUser = async (pno, endUserIp) => {
     return {
