@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:orderRef', validateRequest, async (_req, res) => {
+router.post('/:orderRef', validateRequest, async (req, res) => {
     try {
         const { orderRef } = req.params;
 
