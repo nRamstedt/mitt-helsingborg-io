@@ -1,0 +1,12 @@
+{
+  "LOG": {
+    "LEVEL": "LOG_LEVEL"
+  },
+  "SERVER": {
+    "PORT": "PORT",
+    "CERT": "CERT",
+    "KEY": "KEY",
+    "AUTHSECRET": "AUTHSECRET",
+    "BANKIDURL": "BANKIDURL"
+  }
+}
