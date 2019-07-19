@@ -6,6 +6,7 @@
     "PORT": "PORT",
     "CERT": "CERT",
     "KEY": "KEY",
-    "AUTHSECRET": "AUTHSECRET"
+    "AUTHSECRET": "AUTHSECRET",
+    "BANKIDURL": "BANKIDURL"
   }
 }

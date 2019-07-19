@@ -6,6 +6,7 @@
     "PORT": "env_placeholder",
     "CERT": "env_placeholder",
     "KEY": "env_placeholder",
-    "AUTHSECRET": "env_placeholder"
+    "AUTHSECRET": "env_placeholder",
+    "BANKIDURL": "env_placeholder"
   }
 }

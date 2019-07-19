@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+const config = require('config');
 const dal = require('./dal');
 const authSchemas = require('./validationSchemas/index');
 
@@ -9,17 +10,12 @@ const validateRequest = schemaValidator(true, authSchemas);
 
 router.post('/', async (req, res) => {
   try {
-    console.log('reqbody', req.body);
-
     const { personalNumber, endUserIp } = req.body;
 
-    console.log('pno', personalNumber);
-    console.log('eui', endUserIp);
-
     const user = await dal.authenticate(personalNumber, endUserIp);
-    console.log('user', user);
+
     if (user && user.status === 200) {
-      const token = jwt.sign({ pno: user.personalNumber }, process.env.AUTHSECRET, { expiresIn: '24h' }); // Signing the token
+      const token = jwt.sign({ pno: user.personalNumber }, config.get('SERVER.AUTHSECRET'), { expiresIn: '24h' }); // Signing the token
       res.json({
         sucess: true,
         err: null,
@@ -40,7 +36,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/:orderRef', validateRequest, async (_req, res) => {
+router.post('/:orderRef', validateRequest, async (req, res) => {
   try {
     const { orderRef } = req.params;
 

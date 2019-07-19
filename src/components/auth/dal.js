@@ -5,7 +5,7 @@ const config = require('config');
 
 exports.authenticate = async (personalNumber, endUserIp) => {
   // TODO Save in config file
-  const endpoint = `${process.env.BANKIDURL}/auth/`;
+  const endpoint = `${config.get('SERVER.BANKIDURL')}/auth/`;
 
   const data = {
     personalNumber,
@@ -25,7 +25,7 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 
 exports.collect = async (orderRef) => {
   // TODO Save in config file
-  const endpoint = `${process.env.BANKIDURL}/collect/`;
+  const endpoint = `${config.get('SERVER.BANKIDURL')}/collect/`;
   const data = {
     orderRef,
   };
