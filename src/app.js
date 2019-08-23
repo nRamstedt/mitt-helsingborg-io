@@ -44,7 +44,7 @@ app.use((_req, res, next) => {
 // Require authorization on all endpoints except those specified under unless.
 app.use(
   jwt({ secret: config.get('SERVER.AUTHSECRET') })
-    .unless({ path: ['/auth/', '/auth'] }),
+    .unless({ path: ['/auth/', '/auth', '/'] }),
 );
 
 // If request is unauthorized, send back error information with 401 status.
