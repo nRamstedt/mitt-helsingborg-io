@@ -1,6 +1,7 @@
 
 const express = require('express');
 const https = require('https');
+const http = require('http');
 const config = require('config');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
@@ -8,6 +9,7 @@ const fs = require('fs');
 const jwt = require('express-jwt');
 const cors = require('cors');
 const pino = require('express-pino-logger');
+const sslRedirect = require('heroku-ssl-redirect');
 const swaggerDocument = require('../swagger/swagger.json');
 const routes = require('./components/routes');
 const logger = require('./utils/logger');
@@ -20,12 +22,15 @@ const app = express();
  * Config
  */
 const SERVER_PORT = process.env.PORT || config.get('SERVER.PORT');
-const httpsOptions = {
-  cert: fs.readFileSync(config.get('SERVER.CERT')),
-  key: fs.readFileSync(config.get('SERVER.KEY')),
-  requestCert: false,
-  rejectUnauthorized: false,
-};
+// const httpsOptions = {
+//   cert: fs.readFileSync(config.get('SERVER.CERT')),
+//   key: fs.readFileSync(config.get('SERVER.KEY')),
+//   requestCert: false,
+//   rejectUnauthorized: false,
+// };
+
+// enable ssl redirect in heroku enviroments
+app.use(sslRedirect());
 
 // Allow cors for dev-environment.
 app.use(cors());
@@ -63,6 +68,8 @@ app.use(routes);
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const server = https.createServer(httpsOptions, app).listen(SERVER_PORT, () => console.log(`Mitt Helsingborg touchpoint app listening on port ${SERVER_PORT}!`));
+// const server = https.createServer(httpsOptions, app).listen(SERVER_PORT,
+// () => console.log(`Mitt Helsingborg touchpoint app listening on port ${SERVER_PORT}!`));
+const server = http.createServer(app).listen(SERVER_PORT, () => console.log(`Mitt Helsingborg touchpoint app listening on port ${SERVER_PORT}!`));
 
 module.exports = server;
