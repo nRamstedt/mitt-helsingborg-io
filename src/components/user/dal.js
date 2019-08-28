@@ -1,9 +1,6 @@
-const fs = require('fs');
 const axios = require('axios');
 const https = require('https');
 const mysql = require('mysql');
-const config = require('config');
-
 
 const updateUser = inputData => new Promise(((resolve, reject) => {
   try {
@@ -91,8 +88,8 @@ const getDbConnection = () => mysql.createConnection({
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
-    cert: fs.readFileSync(config.get('SERVER.CERT')),
-    key: fs.readFileSync(config.get('SERVER.KEY')),
+    cert: process.env.CERT,
+    key: process.env.KEY,
   }),
   headers: {
     'Content-Type': 'application/json',
