@@ -2,6 +2,18 @@ const fs = require('fs');
 const axios = require('axios');
 const https = require('https');
 const config = require('config');
+const logger = require('../../utils/logger');
+
+const axiosClient = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+    cert: fs.readFileSync(config.get('SERVER.CERT')),
+    key: fs.readFileSync(config.get('SERVER.KEY')),
+  }),
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 exports.authenticate = async (personalNumber, endUserIp) => {
   // TODO Save in config file
@@ -15,8 +27,8 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 
   return axiosClient.post(endpoint, data).then((response) => {
     if (response.status !== 200) {
-      console.log(response.status);
-      console.log(response.data);
+      logger.info(response.status);
+      logger.info(response.data);
       return null;
     }
     return response.data;
@@ -24,42 +36,49 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 };
 
 exports.collect = async (orderRef) => {
-  // TODO Save in config file
   const endpoint = `${config.get('SERVER.BANKIDURL')}/collect/`;
   const data = {
     orderRef,
   };
   return axiosClient.post(endpoint, data).then((response) => {
     if (response.status !== 200) {
-      console.log(response.status);
-      console.log(response.data);
+      logger.info(response.status);
+      logger.info(response.data);
       return null;
     }
     return response.data;
   });
 };
-// Function to bypass the whole bankid and navet step for dev purposes.
-const bypassAuthUser = async (pno, endUserIp) => ({
-  user: {
-    name: 'Tom Andreasson',
-    givenName: 'Tom',
-    surname: 'Andreasson',
-    personalNumber: pno,
-    navet: {
-      address: 'Drottninggatan 2',
-      zipCode: 11120,
-      city: 'Stockholm',
-    },
-  },
-});
 
-const axiosClient = axios.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false,
-    cert: fs.readFileSync(config.get('SERVER.CERT')),
-    key: fs.readFileSync(config.get('SERVER.KEY')),
-  }),
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+exports.cancel = async (orderRef) => {
+  const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel/`;
+  const data = {
+    orderRef,
+  };
+  return axiosClient.post(endpoint, data).then((response) => {
+    logger.info('ResponseStatue: ', response);
+    if (response.status !== 200) {
+      logger.info(response.status);
+      logger.info(response.data);
+      return null;
+    }
+    return response.data;
+  });
+};
+
+exports.sign = async (personalNumber, endUserIp) => {
+  const endpoint = `${config.get('SERVER.BANKIDURL')}/sign/`;
+  const data = {
+    personalNumber,
+    endUserIp,
+    userVisibleData: 'Helsingborg stad',
+  };
+  return axiosClient.post(endpoint, data).then((response) => {
+    if (response.status !== 200) {
+      logger.info(response.status);
+      logger.info(response.data);
+      return null;
+    }
+    return response.data;
+  });
+};
