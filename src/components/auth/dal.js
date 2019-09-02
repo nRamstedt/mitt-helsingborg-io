@@ -65,12 +65,12 @@ exports.cancel = async (orderRef) => {
   });
 };
 
-exports.sign = async (personalNumber, endUserIp) => {
+exports.sign = async (personalNumber, endUserIp, userVisibleData) => {
   const endpoint = `${config.get('SERVER.BANKIDURL')}/sign/`;
   const data = {
     personalNumber,
     endUserIp,
-    userVisibleData: 'Helsingborg stad',
+    userVisibleData,
   };
   return axiosClient.post(endpoint, data).then((response) => {
     if (response.status !== 200) {

@@ -49,9 +49,9 @@ router.post('/cancel/:orderRef', validateRequest, async (req, res) => {
 
 router.post('/sign', validateRequest, async (req, res) => {
   try {
-    const { personalNumber, endUserIp } = req.body;
+    const { personalNumber, endUserIp, userVisibleData } = req.body;
     let result = {};
-    const user = await dal.sign(personalNumber, endUserIp);
+    const user = await dal.sign(personalNumber, endUserIp, userVisibleData);
     if (user && user.status === 200) {
       result = res.json({
         sucess: true,
