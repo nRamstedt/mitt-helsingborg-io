@@ -8,7 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install node modules
-RUN npm install
+# Install dependencies for alpine (python, make and g++) via apk
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+    && npm install \
+    && apk del .gyp
 
 # Copy the rest of the app
 COPY . ./
