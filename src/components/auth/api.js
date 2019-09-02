@@ -37,18 +37,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/:orderRef', validateRequest, async (req, res) => {
-  try {
-    const { orderRef } = req.params;
-
-    const user = await dal.collect(orderRef);
-
-    return res.json(user);
-  } catch (err) {
-    return err;
-  }
-});
-
 router.post('/cancel/:orderRef', validateRequest, async (req, res) => {
   try {
     const { orderRef } = req.params;
@@ -59,12 +47,11 @@ router.post('/cancel/:orderRef', validateRequest, async (req, res) => {
   }
 });
 
-router.post('/sign', async (req, res) => {
+router.post('/sign', validateRequest, async (req, res) => {
   try {
     const { personalNumber, endUserIp } = req.body;
     let result = {};
     const user = await dal.sign(personalNumber, endUserIp);
-
     if (user && user.status === 200) {
       result = res.json({
         sucess: true,
@@ -72,15 +59,27 @@ router.post('/sign', async (req, res) => {
         user: { ...user.data },
       });
     } else {
-      logger.info('auth failed');
-      result =  res.status(401).json({
+      logger.info('sign failed');
+      result = res.status(401).json({
         sucess: false,
         token: null,
-        err: 'auth failed',
+        err: 'sign failed',
         user: null,
       });
     }
     return result;
+  } catch (err) {
+    return err;
+  }
+});
+
+router.post('/:orderRef', validateRequest, async (req, res) => {
+  try {
+    const { orderRef } = req.params;
+
+    const user = await dal.collect(orderRef);
+
+    return res.json(user);
   } catch (err) {
     return err;
   }
