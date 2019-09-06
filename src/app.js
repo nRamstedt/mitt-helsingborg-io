@@ -9,7 +9,6 @@ const fs = require('fs');
 const jwt = require('express-jwt');
 const cors = require('cors');
 const pino = require('express-pino-logger');
-const sslRedirect = require('heroku-ssl-redirect');
 const swaggerDocument = require('../swagger/swagger.json');
 const routes = require('./components/routes');
 const logger = require('./utils/logger');
@@ -22,37 +21,10 @@ const app = express();
  * Config
  */
 const SERVER_PORT = process.env.PORT || config.get('SERVER.PORT');
-// const httpsOptions = {
-//   cert: fs.readFileSync(config.get('SERVER.CERT')),
-//   key: fs.readFileSync(config.get('SERVER.KEY')),
-//   requestCert: false,
-//   rejectUnauthorized: false,
-// };
-
-// enable ssl redirect in heroku enviroments
-app.use(sslRedirect());
 
 // Allow cors for dev-environment.
 app.use(cors());
 app.options('*', cors());
-
-app.use((_req, res, next) => {
-  res.setHeader('Access-Control-Allow-Headers', 'Content-type, Authorization');
-  next();
-});
-
-// Require authorization on all endpoints except those specified under unless.
-app.use(
-  jwt({ secret: config.get('SERVER.AUTHSECRET') })
-    .unless({ path: ['/auth/', '/auth', '/'] }),
-);
-
-// If request is unauthorized, send back error information with 401 status.
-app.use((err, req, res, next) => {
-  if (err.name === 'UnauthorizedError') {
-    res.status(401).send('Your authorization token is missing or invalid.');
-  }
-});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
