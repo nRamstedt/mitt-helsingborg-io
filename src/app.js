@@ -9,6 +9,7 @@ const fs = require('fs');
 const jwt = require('express-jwt');
 const cors = require('cors');
 const pino = require('express-pino-logger');
+const sslRedirect = require('heroku-ssl-redirect');
 const swaggerDocument = require('../swagger/swagger.json');
 const routes = require('./components/routes');
 const logger = require('./utils/logger');
@@ -21,6 +22,9 @@ const app = express();
  * Config
  */
 const SERVER_PORT = process.env.PORT || config.get('SERVER.PORT');
+
+// enable ssl redirect in heroku enviroments
+app.use(sslRedirect());
 
 // Allow cors for dev-environment.
 app.use(cors());
