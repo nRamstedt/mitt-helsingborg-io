@@ -13,6 +13,7 @@ const sslRedirect = require('heroku-ssl-redirect');
 const swaggerDocument = require('../swagger/swagger.json');
 const routes = require('./components/routes');
 const logger = require('./utils/logger');
+const newrelic = require('newrelic');
 
 require('body-parser-xml')(bodyParser);
 
