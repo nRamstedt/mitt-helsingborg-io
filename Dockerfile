@@ -19,5 +19,5 @@ RUN apk add --no-cache --virtual .gyp \
 # Copy the rest of the app
 COPY . ./
 
-# Start the node server
-CMD ["npm", "start"]
+# Start the node server (dev mode)
+CMD ["npm", "dev"]
