@@ -1,5 +1,5 @@
 
-const newrelic = require('newrelic');
+
 const express = require('express');
 const https = require('https');
 const http = require('http');
