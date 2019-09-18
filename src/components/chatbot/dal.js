@@ -3,13 +3,9 @@ const logger = require('../../utils/logger');
 
 exports.postWatsonMsg = async (msg) => {
   try {
-    const endpoint = 'http://localhost:3037/api/v1/workspaces';
+    const endpoint = `${process.env.WATSONURL}/api/v1/message`;
 
-    const data = {
-      msg,
-    };
-
-    return axios.post(endpoint, data).then((response) => {
+    return axios.post(endpoint, msg).then((response) => {
       if (response.status !== 200) {
         logger.info(response.status);
         logger.info(response.data);
@@ -27,7 +23,7 @@ exports.postWatsonMsg = async (msg) => {
 };
 
 exports.getWatsonWorkspace = async () => {
-  const endpoint = 'http://localhost:3037/api/v1/workspaces';
+  const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
 
   try {
     return axios.get(endpoint).then((response) => {
