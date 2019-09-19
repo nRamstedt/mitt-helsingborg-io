@@ -5,6 +5,7 @@ const user = require('./user/api');
 const form = require('./form/api');
 const notification = require('./notification/api');
 const payment = require('./payment/api');
+const chatbot = require('./chat/api');
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use('/user', user);
 router.use('/form', form);
 router.use('/notification', notification);
 router.use('/payment', payment);
+router.use('/chatbot', chatbot);
 
 module.exports = router;
