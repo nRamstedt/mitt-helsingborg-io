@@ -5,7 +5,7 @@ const user = require('./user/api');
 const form = require('./form/api');
 const notification = require('./notification/api');
 const payment = require('./payment/api');
-const chatbot = require('./chatbot/api');
+const chatbot = require('./chat/api');
 
 const router = express.Router();
 
