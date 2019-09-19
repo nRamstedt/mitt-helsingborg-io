@@ -2,10 +2,10 @@
   "name": "mitt-helsingborg-io",
   "version": "0.0.1",
   "description": "Api for Mitt Helsingborg.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node -r dotenv/config src/app.js",
-    "dev": "nodemon -r dotenv/config src/app.js | ./node_modules/.bin/pino-colada",
+    "start": "NODE_ENV=production node -r dotenv/config src/server.js",
+    "dev": "nodemon -r dotenv/config src/server.js | ./node_modules/.bin/pino-colada",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
     "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
     "lint": "./node_modules/eslint/bin/eslint.js src/** --fix"
