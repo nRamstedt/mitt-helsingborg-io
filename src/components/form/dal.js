@@ -1,4 +1,6 @@
+const axios = require('axios');
 const mysql = require('mysql');
+const logger = require('../../utils/logger');
 
 exports.saveForm = async inputData => new Promise(((resolve, reject) => {
   try {
@@ -14,12 +16,10 @@ exports.saveForm = async inputData => new Promise(((resolve, reject) => {
       if (err) {
         reject(err);
       }
-      console.log('Connected to database');
     });
 
     db.query('INSERT INTO forms SET ?', inputData, (error, results, fields) => {
       if (error) {
-        console.log(error);
         reject(error);
       }
       resolve(results.insertId);
@@ -30,3 +30,37 @@ exports.saveForm = async inputData => new Promise(((resolve, reject) => {
     reject(error);
   }
 }));
+
+exports.getAllForms = async () => {
+  const endpoint = `${process.env.FORM_SERVICE_URL}/forms/`;
+
+  return axios.get(endpoint).then((response) => {
+    if (response.status !== 200) {
+      logger.info(response.status);
+      logger.info(response.data);
+
+      return null;
+    }
+
+    logger.debug(response.data);
+
+    return response.data;
+  });
+};
+
+exports.getFormTemplate = async (formId) => {
+  const endpoint = `${process.env.FORM_SERVICE_URL}/forms/${formId}`;
+
+  return axios.get(endpoint).then((response) => {
+    if (response.status !== 200) {
+      logger.info(response.status);
+      logger.info(response.data);
+
+      return null;
+    }
+
+    logger.debug(response.data);
+
+    return response.data;
+  });
+};

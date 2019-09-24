@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const dal = require('./dal');
+const logger = require('../../utils/logger');
 const authSchemas = require('./validationSchemas/index');
 
 const schemaValidator = require('../middlewares/schemaValidator');
@@ -31,6 +32,34 @@ router.post('/', validateRequest, async (req, res) => {
     );
   } catch (err) {
     res.json(err);
+  }
+});
+
+router.get('/forms', async (req, res) => {
+  try {
+    const reqForms = await dal.getAllForms();
+
+    return res.json(reqForms);
+  } catch (error) {
+    const errorMsg = error.message;
+    logger.error(errorMsg);
+
+    return res.json(errorMsg);
+  }
+});
+
+router.get('/getFormTemplate/:formId', async (req, res) => {
+  const { formId } = req.params;
+
+  try {
+    const reqForm = await dal.getFormTemplate(formId);
+
+    return res.json(reqForm);
+  } catch (error) {
+    const errorMsg = error.message;
+    logger.error(errorMsg);
+
+    return res.json(errorMsg);
   }
 });
 
