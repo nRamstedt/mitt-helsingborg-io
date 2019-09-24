@@ -64,3 +64,21 @@ exports.getFormTemplate = async (formId) => {
     return response.data;
   });
 };
+
+exports.getFormQuestions = async (formId) => {
+  const endpoint = `${process.env.FORM_SERVICE_URL}/forms/${formId}/questions`;
+  logger.debug('form dal');
+
+  return axios.get(endpoint).then((response) => {
+    if (response.status !== 200) {
+      logger.info(response.status);
+      logger.info(response.data);
+
+      return null;
+    }
+
+    logger.debug(response.data);
+
+    return response.data;
+  });
+};

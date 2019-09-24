@@ -63,4 +63,20 @@ router.get('/getFormTemplate/:formId', async (req, res) => {
   }
 });
 
+router.get('/getFormTemplate/:formId/questions', async (req, res) => {
+  const { formId } = req.params;
+  logger.debug('form api');
+
+  try {
+    const reqForm = await dal.getFormQuestions(formId);
+
+    return res.json(reqForm);
+  } catch (error) {
+    const errorMsg = error.message;
+    logger.error(errorMsg);
+
+    return res.json(errorMsg);
+  }
+});
+
 module.exports = router;
