@@ -21,10 +21,10 @@ const app = express();
 /**
  * Config
  */
-const { PORT } = process.env;
+const { PORT, CERT, KEY, AUTHSECRET} = process.env;
 // const httpsOptions = {
-//   cert: fs.readFileSync(config.get('SERVER.CERT')),
-//   key: fs.readFileSync(config.get('SERVER.KEY')),
+//   cert: fs.readFileSync(CERT),
+//   key: fs.readFileSync(KEY),
 //   requestCert: false,
 //   rejectUnauthorized: false,
 // };
@@ -34,7 +34,7 @@ app.use(sslRedirect());
 
 // Allow cors for dev-environment.
 app.use(cors());
-app.options('*', cors()); 
+app.options('*', cors());
 
 app.use((_req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-type, Authorization');
@@ -43,7 +43,7 @@ app.use((_req, res, next) => {
 
 // Require authorization on all endpoints except those specified under unless.
 app.use(
-  jwt({ secret: config.get('SERVER.AUTHSECRET') })
+  jwt({ secret: AUTHSECRET })
     .unless({ path: ['/auth/', '/auth', '/'] }),
 );
 
