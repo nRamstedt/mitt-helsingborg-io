@@ -14,8 +14,6 @@ const swaggerDocument = require('../swagger/swagger.json');
 const routes = require('./components/routes');
 const logger = require('./utils/logger');
 
-require('body-parser-xml')(bodyParser);
-
 const app = express();
 
 /**
@@ -56,7 +54,6 @@ app.use((err, req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.xml({ normalize: true }));
 
 // Request logging
 app.use(pino({ logger }));
