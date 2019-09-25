@@ -14,9 +14,13 @@ const axiosClient = axios.create({
   },
 });
 
+const { BANKIDURL } = process.env;
+
+
+
 exports.authenticate = async (personalNumber, endUserIp) => {
   // TODO Save in config file
-  const endpoint = `${config.get('SERVER.BANKIDURL')}/auth/`;
+  const endpoint = `${BANKIDURL}/auth/`;
 
   const data = {
     personalNumber,
@@ -35,7 +39,7 @@ exports.authenticate = async (personalNumber, endUserIp) => {
 };
 
 exports.collect = async (orderRef) => {
-  const endpoint = `${config.get('SERVER.BANKIDURL')}/collect/`;
+  const endpoint = `${BANKIDURL}/collect/`;
   const data = {
     orderRef,
   };
@@ -50,7 +54,7 @@ exports.collect = async (orderRef) => {
 };
 
 exports.cancel = async (orderRef) => {
-  const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel/`;
+  const endpoint = `${BANKIDURL}/cancel/`;
   const data = {
     orderRef,
   };
@@ -66,7 +70,7 @@ exports.cancel = async (orderRef) => {
 };
 
 exports.sign = async (personalNumber, endUserIp) => {
-  const endpoint = `${config.get('SERVER.BANKIDURL')}/sign/`;
+  const endpoint = `${BANKIDURL}/sign/`;
   const data = {
     personalNumber,
     endUserIp,
