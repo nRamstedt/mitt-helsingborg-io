@@ -1,6 +1,5 @@
 const axios = require('axios');
 const https = require('https');
-const config = require('config');
 const logger = require('../../utils/logger');
 
 const axiosClient = axios.create({

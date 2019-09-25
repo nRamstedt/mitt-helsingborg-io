@@ -2,7 +2,6 @@
 const express = require('express');
 const https = require('https');
 const http = require('http');
-const config = require('config');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
@@ -21,7 +20,8 @@ const app = express();
 /**
  * Config
  */
-const { PORT, CERT, KEY, AUTHSECRET} = process.env;
+const {PORT, CERT, KEY, AUTHSECRET} = process.env;
+const API_BASE = '';
 // const httpsOptions = {
 //   cert: fs.readFileSync(CERT),
 //   key: fs.readFileSync(KEY),
@@ -62,7 +62,7 @@ app.use(bodyParser.xml({ normalize: true }));
 app.use(pino({ logger }));
 
 // Add routes to the app.
-app.use(routes());
+app.use(API_BASE, routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
