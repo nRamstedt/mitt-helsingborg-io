@@ -16,8 +16,6 @@ const axiosClient = axios.create({
 
 const { BANKIDURL } = process.env;
 
-
-
 exports.authenticate = async (personalNumber, endUserIp) => {
   // TODO Save in config file
   const endpoint = `${BANKIDURL}/auth/`;
