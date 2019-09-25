@@ -62,8 +62,7 @@ app.use(bodyParser.xml({ normalize: true }));
 app.use(pino({ logger }));
 
 // Add routes to the app.
-app.get('/', (req, res) => res.send('Mitt Helsingborg API - Main touchpoint for mitt helsingborg app, webpage and assistants.'));
-app.use(routes);
+app.use(routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
