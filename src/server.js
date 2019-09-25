@@ -20,14 +20,14 @@ const app = express();
 /**
  * Config
  */
-const {PORT, CERT, KEY, AUTHSECRET} = process.env;
+const {
+  PORT,
+  CERT,
+  KEY, 
+  AUTHSECRET,
+} = process.env;
+
 const API_BASE = '';
-// const httpsOptions = {
-//   cert: fs.readFileSync(CERT),
-//   key: fs.readFileSync(KEY),
-//   requestCert: false,
-//   rejectUnauthorized: false,
-// };
 
 // enable ssl redirect in heroku enviroments
 app.use(sslRedirect());
