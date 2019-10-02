@@ -1,7 +1,7 @@
 const express = require('express');
 
 // Require underlying service definitions (jsonapi ahndled by respective service)
-const authentication = require('./auth/api');
+const bankidAuth = require('./bankidauth/api');
 const user = require('./user/api');
 const forms = require('./forms/api');
 const notification = require('./notification/api');
@@ -24,7 +24,7 @@ const routes = () => {
   }));
 
   // Register route to api-layer.
-  router.use('/auth', authentication);
+  router.use('/auth/bankid', bankidAuth);
   router.use('/user', user);
   router.use('/forms', forms);
   router.use('/notification', notification);
