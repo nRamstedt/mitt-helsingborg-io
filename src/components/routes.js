@@ -9,7 +9,6 @@ const payment = require('./payment/api');
 const chatbot = require('./chat/api');
 
 const routes = () => {
-
   const router = express.Router();
 
   router.get('/', async (req, res) => res.json({

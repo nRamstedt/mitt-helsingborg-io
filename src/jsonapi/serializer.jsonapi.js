@@ -6,6 +6,6 @@ const Serializer = new JSONAPISerializer({
   unconvertCase: 'camelCase',
 });
 
-Serializer.register('bankidAuth', schemas.bankidAuth);
+Serializer.register('bankidauth', schemas.bankidAuth);
 
 module.exports = Serializer;

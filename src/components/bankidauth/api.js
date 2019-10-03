@@ -8,7 +8,8 @@ const schemaValidator = require('../middlewares/schemaValidator');
 const validateRequest = schemaValidator(true, authSchemas);
 
 router.post('/', async (req, res) => {
-  const response = await dal.authenticateBankid(req, res);
+  console.log(req.body);
+  const response = dal.authenticateBankid(req, res);
   return response;
 });
 

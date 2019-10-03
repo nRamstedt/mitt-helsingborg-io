@@ -37,6 +37,11 @@ class BadRequestError extends DomainError {
     super(msg, 400);
   }
 }
+class UnauthorizedError extends DomainError {
+  constructor(msg) {
+    super(msg, 401);
+  }
+}
 
 class ValidationError extends DomainError {
   constructor(msg, original) {
@@ -64,6 +69,10 @@ const throwCustomDomainError = (statusCode) => {
   switch (statusCode) {
     case 400:
       throw new BadRequestError('The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).');
+      break;
+
+    case 401:
+      throw new UnauthorizedError('The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).');
       break;
 
     case 404:

@@ -26,13 +26,12 @@ const createErrorResponse = async (error, res) => {
 
 const createSuccessResponse = async (data, res, jsonapiType, converter = undefined) => {
   let dataToSerialize = data;
-
   if (converter) {
     dataToSerialize = await jsonapi.convert[converter](dataToSerialize);
   }
 
   const serializedData = await jsonapi.serializer.serialize(jsonapiType, dataToSerialize);
-  return res.json(serializedData)
+  return res.json(serializedData);
 };
 
 
@@ -51,7 +50,7 @@ exports.authenticateBankid = async (req, res) => {
   try {
     const { personalNumber, endUserIp } = req.body;
     const endpoint = `${config.get('SERVER.BANKIDURL')}/auth`;
-    const token = jwt.sign(config.get('SERVER.AUTHSECRET'), { expiresIn: '24h' });
+    const token = jwt.sign({ pno: personalNumber }, config.get('SERVER.AUTHSECRET'), { expiresIn: '24h' });
 
     const data = {
       personalNumber,
@@ -59,12 +58,12 @@ exports.authenticateBankid = async (req, res) => {
       userVisibleData: 'Helsingborg stad',
     };
 
-    const jsonapiResponse = tryAxiosRequest(() => axiosClient.post(endpoint, data));
+    const jsonapiResponse = await tryAxiosRequest(() => axiosClient.post(endpoint, data));
 
     const deserializedJsonapiResponse = jsonapi.serializer.deserialize('bankidauth', jsonapiResponse.data);
-    deserializedJsonapiResponse[token] = token;
+    deserializedJsonapiResponse.token = token;
 
-    return createSuccessResponse(deserializedJsonapiResponse, res, 'bankidauth');
+    return await createSuccessResponse(deserializedJsonapiResponse, res, 'bankidauth');
   } catch (error) {
     return createErrorResponse(error, res);
   }
