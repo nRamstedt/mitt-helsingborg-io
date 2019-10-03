@@ -1,4 +1,5 @@
 const Serializer = require('./serializer.jsonapi');
+const returnJsonApiObject = require('./convert/apiObject.jsonapi');
 
 /**
  * Export
@@ -8,5 +9,7 @@ const Serializer = require('./serializer.jsonapi');
 
 module.exports = {
   serializer: Serializer,
-  convert: {},
+  convert: {
+    apiObject: returnJsonApiObject,
+  },
 };

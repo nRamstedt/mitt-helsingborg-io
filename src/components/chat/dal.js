@@ -1,44 +1,61 @@
 const axios = require('axios');
+const jsonapi = require('../../jsonapi');
 const logger = require('../../utils/logger');
 
-exports.postWatsonMsg = async (msg) => {
+const createErrorResponse = async (error, res) => {
+  logger.error(error);
+  const status = error.status || error.response.status;
+  const serializedData = await jsonapi.serializer.serializeError(error);
+  return res.status(status).json(serializedData);
+};
+
+const createSuccessResponse = async (data, res, jsonapiType, converter) => {
+  const convertData = await jsonapi.convert[converter](data);
+  const serializedData = await jsonapi.serializer.serialize(jsonapiType, convertData);
+  return res.json(serializedData);
+};
+
+/**
+ * CREATE RESOURCE METHODS
+ */
+
+const postWatsonMsg = async (req, res) => {
   try {
     const endpoint = `${process.env.WATSONURL}/api/v1/message`;
 
-    return axios.post(endpoint, msg).then((response) => {
-      if (response.status !== 200) {
-        logger.info(response.status);
-        logger.info(response.data);
+    const resourceData = await axios.post(endpoint, req.body);
 
-        return null;
-      }
-
-      return response.data;
-    });
-  } catch (err) {
-    logger.debug(err.msg);
-
-    return null;
+    return await createSuccessResponse(resourceData.data.data, res, 'message', 'apiObject');
+  } catch (error) {
+    return createErrorResponse(error, res);
   }
 };
 
-exports.getWatsonWorkspace = async () => {
-  const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
+const create = {
+  message: postWatsonMsg,
+};
 
+/**
+ * READ RESOURCE METHODS
+ */
+
+const getWatsonWorkspace = async (req, res) => {
   try {
-    return axios.get(endpoint).then((response) => {
-      if (response.status !== 200) {
-        logger.log(response.status);
-        logger.log(response.data);
+    const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
 
-        return null;
-      }
+    const resourceData = await axios.get(endpoint);
 
-      return response.data;
-    });
+    return await createSuccessResponse(resourceData.data.data, res, 'workspaces', 'apiObject');
   } catch (error) {
-    logger.error(error);
-
-    return null;
+    return createErrorResponse(error, res);
   }
+};
+
+const read = {
+  workspaces: getWatsonWorkspace,
+};
+
+module.exports = {
+  create,
+  read,
 };

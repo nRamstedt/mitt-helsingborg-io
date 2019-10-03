@@ -1,5 +1,7 @@
-const example = require('./example.jsonapi');
+const workspaces = require('./chatbot/workspaces.jsonapi');
+const message = require('./chatbot/message.jsonapi');
 
 module.exports = {
-  example,
+  workspaces,
+  message,
 };
