@@ -69,8 +69,9 @@ exports.authenticateBankid = async (req, res) => {
   }
 };
 
-exports.collect = async (orderRef) => {
+exports.collect = async (req, res) => {
   try {
+    const { orderRef } = req.body;
     const endpoint = `${config.get('SERVER.BANKIDURL')}/collect/`;
 
     const data = {
@@ -85,8 +86,9 @@ exports.collect = async (orderRef) => {
   }
 };
 
-exports.cancel = async (orderRef) => {
+exports.cancel = async (req, res) => {
   try {
+    const { orderRef } = req.body;
     const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel/`;
 
     const data = {
@@ -101,8 +103,9 @@ exports.cancel = async (orderRef) => {
   }
 };
 
-exports.sign = async (personalNumber, endUserIp) => {
+exports.sign = async (req, res) => {
   try {
+    const { personalNumber, endUserIp } = req.body;
     const endpoint = `${config.get('SERVER.BANKIDURL')}/sign/`;
 
     const data = {
