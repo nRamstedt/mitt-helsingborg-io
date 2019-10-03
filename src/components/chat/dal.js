@@ -9,9 +9,13 @@ const createErrorResponse = async (error, res) => {
   return res.status(status).json(serializedData);
 };
 
-const createSuccessResponse = async (data, res, jsonapiType, converter) => {
-  const convertData = await jsonapi.convert[converter](data);
-  const serializedData = await jsonapi.serializer.serialize(jsonapiType, convertData);
+const createSuccessResponse = async (data, res, jsonapiType, converter = undefined) => {
+  let dataToSerialize = data;
+  if (converter) {
+    dataToSerialize = await jsonapi.convert[converter](dataToSerialize);
+  }
+
+  const serializedData = await jsonapi.serializer.serialize(jsonapiType, dataToSerialize);
   return res.json(serializedData);
 };
 
@@ -23,9 +27,10 @@ const postWatsonMsg = async (req, res) => {
   try {
     const endpoint = `${process.env.WATSONURL}/api/v1/message`;
 
-    const resourceData = await axios.post(endpoint, req.body);
+    const jsonapiResponse = await axios.post(endpoint, req.body);
+    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('message', jsonapiResponse.data);
 
-    return await createSuccessResponse(resourceData.data.data, res, 'message', 'apiObject');
+    return await createSuccessResponse(deserializedJsonapiResponse, res, 'message');
   } catch (error) {
     return createErrorResponse(error, res);
   }
@@ -43,9 +48,10 @@ const getWatsonWorkspace = async (req, res) => {
   try {
     const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
 
-    const resourceData = await axios.get(endpoint);
+    const jsonapiResponse = await axios.get(endpoint);
+    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('message', jsonapiResponse.data);
 
-    return await createSuccessResponse(resourceData.data.data, res, 'workspaces', 'apiObject');
+    return await createSuccessResponse(deserializedJsonapiResponse, res, 'workspaces');
   } catch (error) {
     return createErrorResponse(error, res);
   }
