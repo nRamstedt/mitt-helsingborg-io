@@ -1,6 +1,25 @@
 const axios = require('axios');
 const https = require('https');
 const mysql = require('mysql');
+const jsonapi = require('../../jsonapi');
+const logger = require('../../utils/logger');
+
+const createErrorResponse = async (error, res) => {
+  logger.error(error);
+  const status = error.status || error.response.status;
+  const serializedData = await jsonapi.serializer.serializeError(error);
+  return res.status(status).json(serializedData);
+};
+
+const createSuccessResponse = async (data, res, jsonapiType, converter = undefined) => {
+  let dataToSerialize = data;
+  if (converter) {
+    dataToSerialize = await jsonapi.convert[converter](dataToSerialize);
+  }
+
+  const serializedData = await jsonapi.serializer.serialize(jsonapiType, dataToSerialize);
+  return res.json(serializedData);
+};
 
 const updateUser = inputData => new Promise(((resolve, reject) => {
   try {
@@ -96,20 +115,30 @@ const axiosClient = axios.create({
   },
 });
 
-exports.getUser = async (personalNumber) => {
-  try {
-    const endpoint = `${process.env.NAVETURL}/`;
 
-    return axiosClient.get(endpoint, personalNumber).then((response) => {
-      if (response.status !== 200) {
-        console.log(response.status);
-        console.log(response.data);
-        return null;
-      }
-      return response.data;
-    });
+/**
+ * READ RESOURCE METHODS
+ */
+
+const getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const endpoint = `${process.env.NAVETURL}/user/${id}`;
+    const jsonapiResponse = await axiosClient.get(endpoint, id);
+    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('user', jsonapiResponse.data);
+
+    return await createSuccessResponse(deserializedJsonapiResponse, res, 'user');
   } catch (error) {
-    console.log(error);
-    return null;
+    return createErrorResponse(error, res);
   }
+};
+
+const read = {
+  user: getUser,
+};
+
+
+module.exports = {
+  read,
 };

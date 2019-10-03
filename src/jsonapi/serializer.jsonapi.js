@@ -18,5 +18,6 @@ const Serializer = new JSONAPISerializer({
  */
 
 Serializer.register('example', schemas.example);
+Serializer.register('user', schemas.user);
 
 module.exports = Serializer;

@@ -6,17 +6,6 @@ const schemaValidator = require('../middlewares/schemaValidator');
 
 const validateRequest = schemaValidator(true, authSchemas);
 
-router.get('/:id', validateRequest, async (req, res) => {
-  try {
-    const { id } = req.params;
+router.get('/:id', validateRequest, async (req, res) => dal.read.user(req, res));
 
-    const user = await dal.getUser(id);
-
-    return res.json(
-      user,
-    );
-  } catch (err) {
-    return res.json(err);
-  }
-});
 module.exports = router;
