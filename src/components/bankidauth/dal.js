@@ -46,7 +46,7 @@ const tryAxiosRequest = async (callback) => {
 };
 
 
-exports.authenticateBankid = async (req, res) => {
+const auth = async (req, res) => {
   try {
     const { personalNumber, endUserIp } = req.body;
     const endpoint = `${config.get('SERVER.BANKIDURL')}/auth`;
@@ -69,54 +69,65 @@ exports.authenticateBankid = async (req, res) => {
   }
 };
 
-exports.collect = async (req, res) => {
+const collect = async (req, res) => {
   try {
     const { orderRef } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/collect/`;
+    const endpoint = `${config.get('SERVER.BANKIDURL')}/collect`;
 
     const data = {
       orderRef,
     };
 
-    const response = tryAxiosRequest(() => axiosClient.post(endpoint, data));
+    const response = await tryAxiosRequest(() => axiosClient.post(endpoint, data));
 
-    return response.data;
+    return res.json(response.data);
   } catch (error) {
-    return createErrorResponse(error);
+    return createErrorResponse(error, res);
   }
 };
 
-exports.cancel = async (req, res) => {
+const cancel = async (req, res) => {
   try {
     const { orderRef } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel/`;
+    const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel`;
 
     const data = {
       orderRef,
     };
 
-    const response = tryAxiosRequest(() => axiosClient.post(endpoint, data));
+    const response = await tryAxiosRequest(() => axiosClient.delete(endpoint, { data }));
 
-    return response.data;
+    return res.json(response.data);
   } catch (error) {
-    return createErrorResponse(error);
+    return createErrorResponse(error, res);
   }
 };
 
-exports.sign = async (req, res) => {
+const sign = async (req, res) => {
   try {
-    const { personalNumber, endUserIp } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/sign/`;
+    const { personalNumber, endUserIp, userVisibleData } = req.body;
+    const endpoint = `${config.get('SERVER.BANKIDURL')}/sign`;
 
     const data = {
       personalNumber,
       endUserIp,
-      userVisibleData: 'Helsingborg stad',
+      userVisibleData,
     };
-    const response = tryAxiosRequest(() => axiosClient.post(endpoint, data));
+    const response = await tryAxiosRequest(() => axiosClient.post(endpoint, data));
 
-    return response.data;
+    return res.json(response.data);
   } catch (error) {
-    return createErrorResponse(error);
+    return createErrorResponse(error, res);
   }
+};
+
+const bankid = {
+  auth,
+  sign,
+  cancel,
+  collect,
+};
+
+module.exports = {
+  bankid,
 };
