@@ -1,5 +1,5 @@
-const example = require('./example.jsonapi');
+const bankidAuth = require('./bankidauth.jsonapi');
 
 module.exports = {
-  example,
+  bankidAuth,
 };
