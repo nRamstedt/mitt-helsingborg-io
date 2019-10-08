@@ -1,7 +1,5 @@
-const workspaces = require('./chatbot/workspaces.jsonapi');
-const message = require('./chatbot/message.jsonapi');
+const bankidAuth = require('./bankidauth.jsonapi');
 
 module.exports = {
-  workspaces,
-  message,
+  bankidAuth,
 };
