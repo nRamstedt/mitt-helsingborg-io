@@ -6,9 +6,8 @@ const { throwCustomDomainError } = require('../../utils/error');
 const jsonapi = require('../../jsonapi');
 
 const createErrorResponse = async (error, res) => {
-    // console.log(error);
-    // logger.info(error.status);
-    // logger.info(error.data);
+    logger.info(error.status);
+    logger.info(error.data);
     const serializedData = await jsonapi.serializer.serializeError(error);
     return res.status(error.status).json(serializedData);
 };
