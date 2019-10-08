@@ -5,32 +5,32 @@ const { throwCustomDomainError } = require('../../utils/error');
 const jsonapi = require('../../jsonapi');
 
 const createErrorResponse = async (error, res) => {
-    logger.info(error.status);
-    logger.info(error.data);
-    const serializedData = await jsonapi.serializer.serializeError(error);
-    return res.status(error.status).json(serializedData);
+  logger.info(error.status);
+  logger.info(error.data);
+  const serializedData = await jsonapi.serializer.serializeError(error);
+  return res.status(error.status).json(serializedData);
 };
 
-const tryAxiosRequest = async (callback) => {
-    try {
-        const response = await callback();
-        return response;
-    } catch (error) {
-        logger.info(error);
-        throwCustomDomainError(error.response.status);
-        return undefined;
-    }
+const tryAxiosRequest = async callback => {
+  try {
+    const response = await callback();
+    return response;
+  } catch (error) {
+    logger.info(error);
+    throwCustomDomainError(error.response.status);
+    return undefined;
+  }
 };
 
 const axiosClient = axios.create({
-    httpsAgent: new https.Agent({
-        rejectUnauthorized: false,
-        cert: process.env.CERT,
-        key: process.env.KEY,
-    }),
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+    cert: process.env.CERT,
+    key: process.env.KEY,
+  }),
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 /**
@@ -38,24 +38,22 @@ const axiosClient = axios.create({
  */
 
 const getUser = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const endpoint = `${process.env.NAVETURL}/user/${id}`;
-        console.log(endpoint);
-        const response = await tryAxiosRequest(() => axiosClient.get(endpoint));
+    const endpoint = `${process.env.NAVETURL}/user/${id}`;
+    const response = await tryAxiosRequest(() => axiosClient.get(endpoint));
 
-        return res.json(response.data);
-    } catch (error) {
-        return createErrorResponse(error, res);
-    }
+    return res.json(response.data);
+  } catch (error) {
+    return createErrorResponse(error, res);
+  }
 };
 
 const read = {
-    user: getUser,
+  user: getUser,
 };
 
-
 module.exports = {
-    read,
+  read,
 };
