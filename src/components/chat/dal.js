@@ -1,22 +1,24 @@
 const axios = require('axios');
 const jsonapi = require('../../jsonapi');
 const logger = require('../../utils/logger');
+const { throwCustomDomainError } = require('../../utils/error');
 
 const createErrorResponse = async (error, res) => {
-  logger.error(error);
-  const status = error.status || error.response.status;
+  logger.info(error.status);
+  logger.info(error.data);
   const serializedData = await jsonapi.serializer.serializeError(error);
-  return res.status(status).json(serializedData);
+  return res.status(error.status).json(serializedData);
 };
 
-const createSuccessResponse = async (data, res, jsonapiType, converter = undefined) => {
-  let dataToSerialize = data;
-  if (converter) {
-    dataToSerialize = await jsonapi.convert[converter](dataToSerialize);
+const tryAxiosRequest = async callback => {
+  try {
+    const response = await callback();
+    return response;
+  } catch (error) {
+    logger.info(error);
+    throwCustomDomainError(error.response.status);
+    return undefined;
   }
-
-  const serializedData = await jsonapi.serializer.serialize(jsonapiType, dataToSerialize);
-  return res.json(serializedData);
 };
 
 /**
@@ -26,11 +28,9 @@ const createSuccessResponse = async (data, res, jsonapiType, converter = undefin
 const postWatsonMsg = async (req, res) => {
   try {
     const endpoint = `${process.env.WATSONURL}/api/v1/message`;
+    const response = await tryAxiosRequest(() => axios.post(endpoint, req.body));
 
-    const jsonapiResponse = await axios.post(endpoint, req.body);
-    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('message', jsonapiResponse.data);
-
-    return await createSuccessResponse(deserializedJsonapiResponse, res, 'message');
+    return res.json(response.data);
   } catch (error) {
     return createErrorResponse(error, res);
   }
@@ -47,11 +47,9 @@ const create = {
 const getWatsonWorkspace = async (req, res) => {
   try {
     const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
+    const response = await tryAxiosRequest(() => axios.get(endpoint));
 
-    const jsonapiResponse = await axios.get(endpoint);
-    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('message', jsonapiResponse.data);
-
-    return await createSuccessResponse(deserializedJsonapiResponse, res, 'workspaces');
+    return res.json(response.data);
   } catch (error) {
     return createErrorResponse(error, res);
   }
