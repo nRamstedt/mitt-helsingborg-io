@@ -27,7 +27,15 @@ const tryAxiosRequest = async (callback) => {
     const response = await callback();
     return response;
   } catch (error) {
-    throwCustomDomainError(error.response.status);
+    let statusCode;
+
+    if (!error.response) {
+      statusCode = 502 // Triggers if axios gets an connection error from a service.
+    } else {
+      statusCode = error.response.status
+    }
+
+    throwCustomDomainError(statusCode);
     return undefined;
   }
 };
