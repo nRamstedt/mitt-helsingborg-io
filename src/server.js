@@ -20,10 +20,7 @@ const app = express();
 /**
  * Config
  */
-const {
-  PORT,
-  AUTHSECRET,
-} = process.env;
+const { PORT, AUTHSECRET } = process.env;
 
 // enable ssl redirect in heroku enviroments
 app.use(sslRedirect());
@@ -38,10 +35,7 @@ app.use((_req, res, next) => {
 });
 
 // Require authorization on all endpoints except those specified under unless.
-app.use(
-  jwt({ secret: AUTHSECRET })
-    .unless({ path: ['/auth/', '/auth', '/', '/api/v1'] }),
-);
+app.use(jwt({ secret: AUTHSECRET }).unless({ path: ['/auth/', '/auth', '/', '/api/v1'] }));
 
 // If request is unauthorized, send back error information with 401 status.
 app.use((err, req, res, next) => {
@@ -64,7 +58,8 @@ app.use('/api/v1/', routes());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Listen on port specfied in env-file.
-const server = app.listen(PORT,
-  () => logger.info(`Mitt Helsingborg touchpoint listening on port ${PORT}!`));
+const server = app.listen(PORT, () =>
+  logger.info(`Mitt Helsingborg touchpoint listening on port ${PORT}!`)
+);
 
 module.exports = server;
