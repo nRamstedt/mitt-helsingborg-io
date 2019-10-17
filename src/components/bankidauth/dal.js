@@ -1,6 +1,5 @@
 const axios = require('axios');
 const https = require('https');
-const config = require('config');
 const jwt = require('jsonwebtoken');
 const logger = require('../../utils/logger');
 const { throwCustomDomainError } = require('../../utils/error');

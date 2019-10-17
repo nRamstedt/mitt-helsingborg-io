@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+require('dotenv').config();
 
 const express = require('express');
 const https = require('https');
@@ -20,12 +22,8 @@ const app = express();
  */
 const {
   PORT,
-  CERT,
-  KEY, 
   AUTHSECRET,
 } = process.env;
-
-const API_BASE = '';
 
 // enable ssl redirect in heroku enviroments
 app.use(sslRedirect());
@@ -41,8 +39,8 @@ app.use((_req, res, next) => {
 
 // Require authorization on all endpoints except those specified under unless.
 app.use(
-  jwt({ secret: config.get('SERVER.AUTHSECRET') })
-    .unless({ path: ['/auth/', '/auth', '/'] }),
+  jwt({ secret: AUTHSECRET })
+    .unless({ path: ['/auth/', '/auth', '/', '/api/v1'] }),
 );
 
 // If request is unauthorized, send back error information with 401 status.
@@ -59,7 +57,8 @@ app.use(bodyParser.json());
 app.use(pino({ logger }));
 
 // Add routes to the app.
-app.use(API_BASE, routes());
+app.get('/', (req, res) => res.send('Mitt Helsingborg touchpoint'));
+app.use('/api/v1/', routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
