@@ -25,6 +25,11 @@ class InternalServerError extends DomainError {
         super(msg, 500);
     }
 }
+class BadGateway extends DomainError {
+    constructor(msg) {
+        super(msg, 502);
+    }
+}
 
 class ResourceNotFoundError extends DomainError {
     constructor(msg) {
@@ -37,6 +42,7 @@ class BadRequestError extends DomainError {
         super(msg, 400);
     }
 }
+
 class UnauthorizedError extends DomainError {
     constructor(msg) {
         super(msg, 401);
@@ -65,6 +71,10 @@ const throwCustomDomainError = (statusCode) => {
 
         case 422:
             throw new ValidationError('The server understands the content type of the request entity, and the syntax of the request entity is correct but was unable to process the contained instructions.');
+            break;
+
+        case 502:
+            throw new BadGateway('The server was acting as a gateway or proxy and received an invalid response from the upstream server.');
             break;
 
         default:
