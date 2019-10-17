@@ -1,44 +1,65 @@
 const axios = require('axios');
+const jsonapi = require('../../jsonapi');
 const logger = require('../../utils/logger');
+const { throwCustomDomainError } = require('../../utils/error');
 
-exports.postWatsonMsg = async (msg) => {
+const createErrorResponse = async (error, res) => {
+  logger.info(error.status);
+  logger.info(error.data);
+  const serializedData = await jsonapi.serializer.serializeError(error);
+  return res.status(error.status).json(serializedData);
+};
+
+const tryAxiosRequest = async callback => {
   try {
-    const endpoint = `${process.env.WATSONURL}/api/v1/message`;
-
-    return axios.post(endpoint, msg).then((response) => {
-      if (response.status !== 200) {
-        logger.info(response.status);
-        logger.info(response.data);
-
-        return null;
-      }
-
-      return response.data;
-    });
-  } catch (err) {
-    logger.debug(err.msg);
-
-    return null;
+    const response = await callback();
+    return response;
+  } catch (error) {
+    logger.info(error);
+    throwCustomDomainError(error.response.status);
+    return undefined;
   }
 };
 
-exports.getWatsonWorkspace = async () => {
-  const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
+/**
+ * CREATE RESOURCE METHODS
+ */
 
+const postWatsonMsg = async (req, res) => {
   try {
-    return axios.get(endpoint).then((response) => {
-      if (response.status !== 200) {
-        logger.log(response.status);
-        logger.log(response.data);
+    const endpoint = `${process.env.WATSONURL}/api/v1/message`;
+    const response = await tryAxiosRequest(() => axios.post(endpoint, req.body));
 
-        return null;
-      }
-
-      return response.data;
-    });
+    return res.json(response.data);
   } catch (error) {
-    logger.error(error);
-
-    return null;
+    return createErrorResponse(error, res);
   }
+};
+
+const create = {
+  message: postWatsonMsg,
+};
+
+/**
+ * READ RESOURCE METHODS
+ */
+
+const getWatsonWorkspace = async (req, res) => {
+  try {
+    const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
+    const response = await tryAxiosRequest(() => axios.get(endpoint));
+
+    return res.json(response.data);
+  } catch (error) {
+    return createErrorResponse(error, res);
+  }
+};
+
+const read = {
+  workspaces: getWatsonWorkspace,
+};
+
+module.exports = {
+  create,
+  read,
 };

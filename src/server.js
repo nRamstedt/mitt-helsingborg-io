@@ -43,7 +43,7 @@ app.use((_req, res, next) => {
 
 // Require authorization on all endpoints except those specified under unless.
 app.use(
-  jwt({ secret: AUTHSECRET })
+  jwt({ secret: config.get('SERVER.AUTHSECRET') })
     .unless({ path: ['/auth/', '/auth', '/'] }),
 );
 
