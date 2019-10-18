@@ -23,7 +23,7 @@ const app = express();
  */
 const { PORT, AUTHSECRET } = process.env;
 
-// enable ssl redirect in heroku enviroments
+// enable ssl redirect in production enviroments
 app.use(sslRedirect());
 
 // Allow cors for dev-environment.
