@@ -42,7 +42,7 @@ const tryAxiosRequest = async (callback) => {
 
 const readForms = async (req, res) => {
   try {
-    const endpoint = `${process.env.FORMSERVICEURL}/forms/`;
+    const endpoint = `${process.env.FORMSERVICEURL}/api/v1/forms/`;
     const axiosResponse = await tryAxiosRequest(() => axiosClient.get(endpoint));
 
     return res.json(axiosResponse.data);
@@ -54,7 +54,7 @@ const readForms = async (req, res) => {
 const readForm = async (req, res) => {
   try {
     const { formId } = req.params;
-    const endpoint = `${process.env.FORMSERVICEURL}/forms/${formId}`;
+    const endpoint = `${process.env.FORMSERVICEURL}/api/v1/forms/${formId}`;
     const axiosResponse = await tryAxiosRequest(() => axiosClient.get(endpoint));
 
     return res.json(axiosResponse.data);
@@ -66,7 +66,7 @@ const readForm = async (req, res) => {
 const readFormQuestions = async (req, res) => {
   try {
     const { formId } = req.params;
-    const endpoint = `${process.env.FORMSERVICEURL}/forms/${formId}`;
+    const endpoint = `${process.env.FORMSERVICEURL}/api/v1/forms/${formId}`;
     const axiosResponse = await tryAxiosRequest(() => axiosClient.get(endpoint));
 
     return res.json(axiosResponse.data);
