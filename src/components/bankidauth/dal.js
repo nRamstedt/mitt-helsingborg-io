@@ -33,8 +33,7 @@ const createSuccessResponse = async (data, res, jsonapiType, converter = undefin
   return res.json(serializedData);
 };
 
-
-const tryAxiosRequest = async (callback) => {
+const tryAxiosRequest = async callback => {
   try {
     const response = await callback();
     return response;
@@ -44,12 +43,13 @@ const tryAxiosRequest = async (callback) => {
   }
 };
 
-
 const auth = async (req, res) => {
   try {
     const { personalNumber, endUserIp } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/auth`;
-    const token = jwt.sign({ pno: personalNumber }, config.get('SERVER.AUTHSECRET'), { expiresIn: '24h' });
+    const endpoint = `${process.env.BANKIDURL}/api/v1/auth`;
+    const token = jwt.sign({ pno: personalNumber }, `${process.env.BANKIDURL}/api/v1/auth`, {
+      expiresIn: '24h',
+    });
 
     const data = {
       personalNumber,
@@ -59,7 +59,10 @@ const auth = async (req, res) => {
 
     const jsonapiResponse = await tryAxiosRequest(() => axiosClient.post(endpoint, data));
 
-    const deserializedJsonapiResponse = jsonapi.serializer.deserialize('bankidauth', jsonapiResponse.data);
+    const deserializedJsonapiResponse = jsonapi.serializer.deserialize(
+      'bankidauth',
+      jsonapiResponse.data
+    );
     deserializedJsonapiResponse.token = token;
 
     return await createSuccessResponse(deserializedJsonapiResponse, res, 'bankidauth');
@@ -71,7 +74,7 @@ const auth = async (req, res) => {
 const collect = async (req, res) => {
   try {
     const { orderRef } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/collect`;
+    const endpoint = `${process.env.BANKIDURL}/api/v1/collect`;
 
     const data = {
       orderRef,
@@ -88,7 +91,7 @@ const collect = async (req, res) => {
 const cancel = async (req, res) => {
   try {
     const { orderRef } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/cancel`;
+    const endpoint = `${process.env.BANKIDURL}/api/v1/cancel`;
 
     const data = {
       orderRef,
@@ -105,7 +108,7 @@ const cancel = async (req, res) => {
 const sign = async (req, res) => {
   try {
     const { personalNumber, endUserIp, userVisibleData } = req.body;
-    const endpoint = `${config.get('SERVER.BANKIDURL')}/sign`;
+    const endpoint = `${process.env.BANKIDURL}/api/v1/sign`;
 
     const data = {
       personalNumber,
