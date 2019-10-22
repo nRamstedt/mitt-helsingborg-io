@@ -1,8 +1,7 @@
 const axios = require('axios');
-const https = require('https');
+const jsonapi = require('../../jsonapi');
 const logger = require('../../utils/logger');
 const { throwCustomDomainError } = require('../../utils/error');
-const jsonapi = require('../../jsonapi');
 
 const createErrorResponse = async (error, res) => {
   logger.info(error.status);
@@ -22,27 +21,33 @@ const tryAxiosRequest = async callback => {
   }
 };
 
-const axiosClient = axios.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false,
-    cert: process.env.CERT,
-    key: process.env.KEY,
-  }),
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+/**
+ * CREATE RESOURCE METHODS
+ */
+
+const postWatsonMsg = async (req, res) => {
+  try {
+    const endpoint = `${process.env.WATSONURL}/api/v1/message`;
+    const response = await tryAxiosRequest(() => axios.post(endpoint, req.body));
+
+    return res.json(response.data);
+  } catch (error) {
+    return createErrorResponse(error, res);
+  }
+};
+
+const create = {
+  message: postWatsonMsg,
+};
 
 /**
  * READ RESOURCE METHODS
  */
 
-const getUser = async (req, res) => {
+const getWatsonWorkspace = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const endpoint = `${process.env.NAVETURL}/user/${id}`;
-    const response = await tryAxiosRequest(() => axiosClient.get(endpoint));
+    const endpoint = `${process.env.WATSONURL}/api/v1/workspaces`;
+    const response = await tryAxiosRequest(() => axios.get(endpoint));
 
     return res.json(response.data);
   } catch (error) {
@@ -51,9 +56,10 @@ const getUser = async (req, res) => {
 };
 
 const read = {
-  user: getUser,
+  workspaces: getWatsonWorkspace,
 };
 
 module.exports = {
+  create,
   read,
 };
