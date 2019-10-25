@@ -7,23 +7,28 @@
  * All kudos to the author: Richard Clayton
  */
 class DomainError extends Error {
-    constructor(msg, status) {
-        super(msg);
-        // Ensure the name of this error is the same as the class name
-        this.name = this.constructor.name;
-        this.status = status;
-        this.detial = msg;
-        // This clips the constructor invocation from the stack trace.
-        // It's not absolutely essential, but it does make the stack trace a little nicer.
-        // Ssee Node.js reference.
-        Error.captureStackTrace(this, this.constructor);
-    }
+  constructor(msg, status) {
+    super(msg);
+    // Ensure the name of this error is the same as the class name
+    this.name = this.constructor.name;
+    this.status = status;
+    this.detial = msg;
+    // This clips the constructor invocation from the stack trace.
+    // It's not absolutely essential, but it does make the stack trace a little nicer.
+    // Ssee Node.js reference.
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
 class InternalServerError extends DomainError {
-    constructor(msg) {
-        super(msg, 500);
-    }
+  constructor(msg) {
+    super(msg, 500);
+  }
+}
+class BadGateway extends DomainError {
+  constructor(msg) {
+    super(msg, 502);
+  }
 }
 class BadGateway extends DomainError {
     constructor(msg) {
@@ -32,27 +37,27 @@ class BadGateway extends DomainError {
 }
 
 class ResourceNotFoundError extends DomainError {
-    constructor(msg) {
-        super(msg, 404);
-    }
+  constructor(msg) {
+    super(msg, 404);
+  }
 }
 
 class BadRequestError extends DomainError {
-    constructor(msg) {
-        super(msg, 400);
-    }
+  constructor(msg) {
+    super(msg, 400);
+  }
 }
 
 class UnauthorizedError extends DomainError {
-    constructor(msg) {
-        super(msg, 401);
-    }
+  constructor(msg) {
+    super(msg, 401);
+  }
 }
 
 class ValidationError extends DomainError {
-    constructor(msg) {
-        super(msg, 422);
-    }
+  constructor(msg) {
+    super(msg, 422);
+  }
 }
 
 const throwCustomDomainError = (statusCode) => {
@@ -84,10 +89,10 @@ const throwCustomDomainError = (statusCode) => {
 };
 
 module.exports = {
-    throwCustomDomainError,
-    domainErrors: {
-        InternalServerError,
-        ValidationError,
-        ResourceNotFoundError,
-    },
+  throwCustomDomainError,
+  domainErrors: {
+    InternalServerError,
+    ValidationError,
+    ResourceNotFoundError,
+  },
 };

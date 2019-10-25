@@ -11,16 +11,18 @@ const chatbot = require('./chat/api');
 const routes = () => {
   const router = express.Router();
 
-  router.get('/', async (req, res) => res.json({
-    jsonapi: {
-      version: '1.0',
-      meta: {
-        service: 'mitt-helsingborg-io',
-        owner: 'Helsingborg Stad',
-        description: 'Main touchpoint for mitt helsingborg app, webpage and assistants.',
+  router.get('/', async (req, res) =>
+    res.json({
+      jsonapi: {
+        version: '1.0',
+        meta: {
+          service: 'mitt-helsingborg-io',
+          owner: 'Helsingborg Stad',
+          description: 'Main touchpoint for mitt helsingborg app, webpage and assistants.',
+        },
       },
-    },
-  }));
+    })
+  );
 
   // Register route to api-layer.
   router.use('/auth/bankid', bankidAuth);
