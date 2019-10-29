@@ -30,11 +30,6 @@ class BadGateway extends DomainError {
     super(msg, 502);
   }
 }
-class BadGateway extends DomainError {
-    constructor(msg) {
-        super(msg, 502);
-    }
-}
 
 class ResourceNotFoundError extends DomainError {
   constructor(msg) {
