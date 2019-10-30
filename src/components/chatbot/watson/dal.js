@@ -1,7 +1,7 @@
 const axios = require('axios');
-const jsonapi = require('../../jsonapi');
-const logger = require('../../utils/logger');
-const { throwCustomDomainError } = require('../../utils/error');
+const jsonapi = require('../../../jsonapi');
+const logger = require('../../../utils/logger');
+const { throwCustomDomainError } = require('../../../utils/error');
 
 const createErrorResponse = async (error, res) => {
   logger.info(error.status);
