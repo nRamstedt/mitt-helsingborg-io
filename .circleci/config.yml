@@ -183,13 +183,13 @@ workflows:
                 - master
                 - develop
                 - /feature.*/
-      - lint:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
-                - /feature.*/
+      # - lint:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #           - develop
+      #           - /feature.*/
       - set_pkg_number_release:
           filters:
             branches:
