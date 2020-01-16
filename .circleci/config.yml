@@ -196,6 +196,6 @@ workflows:
               only:
                 - master
           requires:
-            - lint
+            # - lint
             - unit
             - build
