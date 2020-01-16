@@ -33,45 +33,44 @@ executors:
       - image: circleci/buildpack-deps:stretch
 
 jobs:
+  # lint:
+  #   working_directory: ~/application
+  #   docker:
+  #     - image: circleci/node:12.3.1
+  #   steps:
+  #     # Check out the code in the project directory.
+  #     - checkout
 
-  lint:
-    working_directory: ~/application
-    docker:
-      - image: circleci/node:12.3.1
-    steps:
-      # Check out the code in the project directory.
-      - checkout
+  #     - restore_cache:
+  #         key: lint-v1-{{ checksum "package.json" }}-{{ arch }}
 
-      - restore_cache:
-          key: lint-v1-{{ checksum "package.json" }}-{{ arch }}
+  #     - run:
+  #         name: Install depencencys
+  #         command: npm install
 
-      - run:
-          name: Install depencencys
-          command: npm install
+  #     - save_cache:
+  #         key: lint-v1-{{ checksum "package.json" }}-{{ arch }}
+  #         paths:
+  #           - node_modules
 
-      - save_cache:
-          key: lint-v1-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
+  #     - run:
+  #         name: Running eslint
+  #         command: |
+  #           mkdir -p test-results/eslint
+  #           npm run lint
+  #         when: always
 
-      - run:
-          name: Running eslint
-          command: |
-            mkdir -p test-results/eslint
-            npm run lint
-          when: always
+  #     # Persist temporary files (stored up to 30 days).
+  #     - persist_to_workspace:
+  #         root: ~/application
+  #         paths:
+  #           - node_modules
 
-      # Persist temporary files (stored up to 30 days).
-      - persist_to_workspace:
-          root: ~/application
-          paths:
-            - node_modules
+  #     - store_test_results:
+  #         path: test-results/eslint
 
-      - store_test_results:
-          path: test-results/eslint
-
-      - store_artifacts:
-          path: test-results/eslint
+  #     - store_artifacts:
+  #         path: test-results/eslint
 
   unit:
     working_directory: ~/application
@@ -155,7 +154,6 @@ jobs:
       - image: circleci/node:12.3.1
 
     steps:
-
       - checkout
 
       - run:
